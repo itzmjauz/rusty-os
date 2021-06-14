@@ -2,3 +2,8 @@ target/
 *.un~
 *.swp
 result/
+
+
+# Added by cargo
+
+/target
