@@ -1,8 +1,9 @@
 #![no_std] // do not load the standard library
-// developer mode
+#![no_main] // main is not the entry point
+
 #![allow(unused_imports)]
 #![allow(unused_variables)]
-// imports
+
 use core::panic::PanicInfo; // panic handler import
 
 #[panic_handler]
@@ -10,6 +11,8 @@ fn panic(_info: &PanicInfo) -> ! {
     loop {}
 }
 
-fn main() {
-    let a = 1;
+#[no_mangle]
+pub extern "C" fn _start() -> ! {
+    // entry point of system
+    loop {}
 }
