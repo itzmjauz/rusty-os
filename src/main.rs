@@ -1,28 +1,36 @@
 #![no_std] // do not load the standard library
 #![no_main] // main is not the entry point
-
 #![allow(unused_imports)]
 #![allow(unused_variables)]
-
 #![feature(custom_test_frameworks)]
 #![test_runner(crate::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
-mod vga_buffer;
 mod serial;
+mod vga_buffer;
 
 use core::panic::PanicInfo; // panic handler import
 
 // Function called at panic
+#[cfg(not(test))]
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     println!("{}", info);
     loop {}
 }
+
+#[cfg(test)]
+#[panic_handler]
+fn panic(info: &PanicInfo) -> ! {
+    serial_println!("[failed]\n");
+    serial_println!("Error: {}", info);
+    exit_qemu(QemuExitCode::Failed);
+    loop {}
+}
 // Testing framework
 #[cfg(test)]
 fn test_runner(tests: &[&dyn Fn()]) {
-    println!("Running {} tests", tests.len());
+    serial_println!("Running {} tests", tests.len());
     for test in tests {
         test();
     }
@@ -57,7 +65,14 @@ pub extern "C" fn _start() -> ! {
 //testcases
 #[test_case]
 fn trivial_assertion() {
-    print!("trivial assertion... ");
+    serial_print!("trivial assertion... ");
     assert_eq!(1, 1);
-    println!("[ok]");
+    serial_println!("[ok]");
+}
+
+#[test_case]
+fn panic_assertion() {
+    serial_print!("Testing panic... ");
+    assert_eq!(1, 0);
+    serial_println!("[ok]");
 }
