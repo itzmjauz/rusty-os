@@ -4,6 +4,8 @@
 #![allow(unused_imports)]
 #![allow(unused_variables)]
 
+mod vga_buffer;
+
 use core::panic::PanicInfo; // panic handler import
 
 #[panic_handler]
