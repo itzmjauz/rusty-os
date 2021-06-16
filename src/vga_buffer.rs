@@ -26,11 +26,11 @@ struct ColorCode(u8);
 
 impl ColorCode {
     fn new(foreground: Color, background: Color) -> ColorCode {
-        ColorCode((background as u8) << 4 | (foreground as u8)
+        ColorCode((background as u8) << 4 | (foreground as u8))
     }
 }
 
-#[derice(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
 struct ScreenChar {
     ascii_character: u8,
@@ -54,7 +54,7 @@ pub struct Writer {
 impl Writer {
     pub fn write_byte(&mut self, byte: u8) {
         match byte {
-            b'\n' => self.new_line();
+            b'\n' => self.new_line(),
             byte => {
                 if self.column_position >= BUFFER_WIDTH {
                     self.new_line();
@@ -69,7 +69,7 @@ impl Writer {
                     color_code,
                 };
                 self.column_position += 1;
-            }
+            },
         }
     }
 
@@ -77,23 +77,25 @@ impl Writer {
 
     pub fn write_string(&mut self, s: &str) {
         for byte in s.bytes() {
-            // Is ASCII or newline
-            0x20..=0x7e | b'\n' => self.write_byte(byte),
-            // or not
-            _ => self.write_byte(0xfe),
+            match byte {
+                // Is ASCII or newline
+                0x20..=0x7e | b'\n' => self.write_byte(byte),
+                // or not
+                _ => self.write_byte(0xfe),
+            }
         }
     }
 }
 
 //test function
 pub fn print_something() {
-    let mut writer = {
+    let mut writer = Writer {
         column_position: 0,
-        color_code: ColorCode::new(Color: Yellow, Color: Black),
+        color_code: ColorCode::new(Color::Yellow, Color::Black),
         buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },
     };
 
-    write.write_byte(b'H');
-    write.write_string("ello ");
-    write.write_string("Wörld!");
+    writer.write_byte(b'H');
+    writer.write_string("ello ");
+    writer.write_string("Wörld!");
 }
