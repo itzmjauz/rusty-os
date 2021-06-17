@@ -9,11 +9,11 @@ target = "x86_64-rusty-os.json"
 #runner = "bootimage runner"
 
 [alias]
-kbuild = """build --target x86_64-blog_os.json -Z build-std=core \
+kbuild = """build --target x86_64-rusty-os.json -Z build-std=core \
     -Z build-std-features=compiler-builtins-mem"""
-kcheck = """check --target x86_64-blog_os.json -Z build-std=core \
+kcheck = """check --target x86_64-rusty-os.json -Z build-std=core \
     -Z build-std-features=compiler-builtins-mem"""
-kdoc = """doc --target x86_64-blog_os.json -Z build-std=core \
+kdoc = """doc --target x86_64-rusty-os.json -Z build-std=core \
     -Z build-std-features=compiler-builtins-mem"""
-kclippy = """clippy --target x86_64-blog_os.json -Z build-std=core \
+kclippy = """clippy --target x86_64-rusty-os.json -Z build-std=core \
     -Z build-std-features=compiler-builtins-mem"""
