@@ -23,10 +23,13 @@ fn panic(info: &PanicInfo) -> ! {
     rusty_os::test_panic_handler(info)
 }
 
-#[no_mangle]
-pub extern "C" fn _start() -> ! {
-    println!("Hello World! : #{}", 1);
+use bootloader::{entry_point, BootInfo};
 
+entry_point!(kernel_main);
+
+fn kernel_main(boot_info: &'static mut BootInfo) -> ! {
+    println!("Hello World! : #{}", 1);
+    
     #[cfg(test)]
     test_main();
     loop {}
